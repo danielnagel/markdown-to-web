@@ -20,6 +20,11 @@ export function resolveWikilinks(content, source) {
       console.warn(`[wikilinks] ambiguous link "[[${basename}]]" in source "${source}" - using first match`);
     }
 
-    return `[${label}](/read/${source}/${matches[0].path})`;
+    // Percent-encoded per segment (like FileView.vue does for the API call):
+    // a raw space - very common in Obsidian note names - is not allowed in a
+    // Markdown link destination, so markdown-it would render the whole link
+    // as plain text.
+    const href = [source, ...matches[0].path.split('/')].map(encodeURIComponent).join('/');
+    return `[${label}](/read/${href})`;
   });
 }

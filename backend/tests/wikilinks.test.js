@@ -9,22 +9,28 @@ beforeEach(() => {
 it('resolves a simple wikilink', () => {
   upsertLink('demo', 'Genus Panthera', 'Genus Panthera.md');
   const result = resolveWikilinks('See [[Genus Panthera]] for more.', 'demo');
-  expect(result).toBe('See [Genus Panthera](/read/demo/Genus Panthera.md) for more.');
+  expect(result).toBe('See [Genus Panthera](/read/demo/Genus%20Panthera.md) for more.');
 });
 
 it('resolves a wikilink with display text', () => {
   upsertLink('demo', 'Genus Panthera', 'Genus Panthera.md');
   const result = resolveWikilinks('[[Genus Panthera|the cats]]', 'demo');
-  expect(result).toBe('[the cats](/read/demo/Genus Panthera.md)');
+  expect(result).toBe('[the cats](/read/demo/Genus%20Panthera.md)');
 });
 
 it('ignores the anchor part of [[name#Heading]]', () => {
   upsertLink('demo', 'Genus Panthera', 'Genus Panthera.md');
   const result = resolveWikilinks('[[Genus Panthera#Diet]]', 'demo');
-  expect(result).toBe('[Genus Panthera](/read/demo/Genus Panthera.md)');
+  expect(result).toBe('[Genus Panthera](/read/demo/Genus%20Panthera.md)');
 });
 
 it('leaves an unresolved link as plain text', () => {
   const result = resolveWikilinks('[[Unknown Page]]', 'demo');
   expect(result).toBe('Unknown Page');
+});
+
+it('encodes each path segment but keeps the folder separators', () => {
+  upsertLink('demo', 'Genus Panthera', 'Big Cats/Genus Panthera.md');
+  const result = resolveWikilinks('[[Genus Panthera]]', 'demo');
+  expect(result).toBe('[Genus Panthera](/read/demo/Big%20Cats/Genus%20Panthera.md)');
 });
