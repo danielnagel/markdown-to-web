@@ -1,5 +1,9 @@
 # Markdown to Web
 
+<p align="center">
+  <img src="frontend/public/logo.default.svg" alt="Markdown to Web logo" width="160">
+</p>
+
 Mobile-first web app for read-only browsing of Markdown notes from configurable data sources
 (primarily a git repository, optionally a local folder). Tree navigation, full-text search,
 Obsidian-style `[[wikilink]]` resolution, and a JWT login.
