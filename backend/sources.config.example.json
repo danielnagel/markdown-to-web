@@ -1,0 +1,4 @@
+[
+  { "name": "notes", "type": "local", "path": "/data/notes" },
+  { "name": "wiki", "type": "git", "url": "https://github.com/user/repo.git", "pat": "ENV:WIKI_PAT" }
+]

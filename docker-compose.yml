@@ -1,0 +1,46 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 3000
+      # Must match the "./data:/data" volume mount below - DATA_DIR defaults
+      # to "./data" (see backend/src/config/index.js), which without this
+      # would resolve to /app/backend/data instead of the mounted volume,
+      # silently breaking persistence of cloned repos + the search index
+      # across container restarts.
+      DATA_DIR: /data
+      # Exactly one reverse-proxy hop sits in front of "backend" here: the
+      # "frontend" nginx container (see frontend/nginx.conf).
+      TRUST_PROXY_HOPS: 1
+      # Set MODE=demo (e.g. "MODE=demo docker compose up --build") to try out
+      # the bundled demo dataset instead of sources.config.json (see
+      # backend/src/config/index.js and demo/notes).
+      MODE: ${MODE:-}
+      WIKI_PAT: ${WIKI_PAT:-}
+    volumes:
+      - ./data:/data
+      - ./backend/sources.config.json:/app/backend/sources.config.json:ro
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    environment:
+      MODE: ${MODE:-}
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    volumes:
+      # Overlay the generic default logo/favicon baked into the image with a
+      # custom one, without rebuilding. Point LOGO_FILE/FAVICON_FILE (in
+      # .env) at your own files; unset falls back to the generic defaults.
+      - ${LOGO_FILE:-./frontend/public/logo.default.svg}:/usr/share/nginx/html/logo.svg:ro
+      - ${FAVICON_FILE:-./frontend/public/favicon.default.svg}:/usr/share/nginx/html/favicon.svg:ro
