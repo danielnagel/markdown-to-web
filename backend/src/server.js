@@ -8,6 +8,12 @@ import { sourceRoot } from './fs/paths.js';
 import { ensureDemoUser } from './auth/users.js';
 
 async function main() {
+  // Without a secret jsonwebtoken would sign/verify with `undefined` and fail
+  // on every login - better to refuse to start at all.
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not set');
+  }
+
   const sources = loadSources();
 
   if (process.env.MODE === 'demo') {

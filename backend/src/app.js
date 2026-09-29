@@ -10,9 +10,9 @@ export function createApp(sources) {
   const app = express();
 
   // Number of reverse-proxy hops in front of this service (e.g. an outer
-  // reverse proxy plus the frontend's nginx = 2). Not load-bearing for
-  // anything in v1 (no rate limiting yet), but wired up so req.ip is correct
-  // once it is.
+  // reverse proxy plus the frontend's nginx = 2). The login rate limiter
+  // keys on req.ip, so this must match the real deployment or all clients
+  // share the proxy's IP (and thus one limit).
   app.set('trust proxy', Number.parseInt(process.env.TRUST_PROXY_HOPS ?? '0', 10));
 
   app.use(express.json());

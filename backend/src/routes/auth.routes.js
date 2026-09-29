@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { verifyCredentials } from '../auth/users.js';
+import { loginRateLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', loginRateLimiter, async (req, res, next) => {
   try {
     const { username, password } = req.body ?? {};
     if (!username || !password) {
