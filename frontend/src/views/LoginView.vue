@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '../stores/auth.store';
 import { isDemoMode } from '../constants/mode';
+import MadeByLink from '../components/MadeByLink.vue';
 
 const username = ref('');
 const password = ref('');
@@ -91,6 +92,13 @@ async function submit() {
           {{ loading ? 'Logging in…' : 'Log in' }}
         </button>
       </form>
+
+      <div
+        v-if="isDemoMode()"
+        class="mt-6 text-center"
+      >
+        <MadeByLink />
+      </div>
     </div>
   </div>
 </template>

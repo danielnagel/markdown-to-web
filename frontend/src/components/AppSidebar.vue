@@ -3,6 +3,8 @@ import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSourcesStore } from '../stores/sources.store';
 import { useAuthStore } from '../stores/auth.store';
+import { isDemoMode } from '../constants/mode';
+import MadeByLink from './MadeByLink.vue';
 import SearchBar from './SearchBar.vue';
 import TreeEntry from './TreeEntry.vue';
 
@@ -89,7 +91,7 @@ function logout() {
       </p>
     </div>
 
-    <div class="border-t border-black/10 p-3">
+    <div class="flex items-center justify-between border-t border-black/10 p-3">
       <button
         type="button"
         class="text-sm text-secondary/70 hover:text-secondary"
@@ -97,6 +99,7 @@ function logout() {
       >
         Log out
       </button>
+      <MadeByLink v-if="isDemoMode()" />
     </div>
   </aside>
 </template>
