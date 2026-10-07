@@ -91,7 +91,7 @@ function logout() {
       </p>
     </div>
 
-    <div class="flex items-center justify-between border-t border-black/10 p-3">
+    <div class="mt-auto flex items-center justify-between border-t border-black/10 p-3">
       <button
         type="button"
         class="text-sm text-secondary/70 hover:text-secondary"
