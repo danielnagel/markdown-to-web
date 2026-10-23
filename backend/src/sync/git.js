@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import simpleGit from 'simple-git';
+import { simpleGit } from 'simple-git';
 import { DATA_DIR } from '../config/index.js';
 
 export function sourceDir(name) {
@@ -12,7 +12,11 @@ export function sourceDir(name) {
 // the clone's .git/config (on the persistent volume) and in simple-git's
 // error messages (which log the full command line), leaking the token.
 // simple-git blocks GIT_CONFIG_COUNT by default since it can smuggle in
-// arbitrary git config - safe here because every value is set by us.
+// arbitrary git config - safe here because every value is set by us. Since
+// v4 every GIT_* var passed via .env() must also be listed in
+// allowEnvironment.
+const ALLOWED_ENV = ['GIT_TERMINAL_PROMPT', 'GIT_CONFIG_COUNT', 'GIT_CONFIG_KEY_0', 'GIT_CONFIG_VALUE_0'];
+
 export function gitFor(source, dir) {
   // Deliberately not the whole process.env: simple-git also rejects other
   // "unsafe" vars that may be set on a dev machine (EDITOR, GIT_EDITOR, ...).
@@ -25,7 +29,11 @@ export function gitFor(source, dir) {
       GIT_CONFIG_VALUE_0: `Authorization: Basic ${credentials}`,
     });
   }
-  return simpleGit({ baseDir: dir, unsafe: { allowUnsafeConfigEnvCount: true } }).env(env);
+  return simpleGit({
+    baseDir: dir,
+    allowEnvironment: ALLOWED_ENV,
+    unsafe: { allowUnsafeConfigEnvCount: true },
+  }).env(env);
 }
 
 // Returns true if a fresh clone happened, false if the source was already
