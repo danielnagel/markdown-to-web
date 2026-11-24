@@ -1,3 +1,0 @@
-[
-  { "name": "wiki", "type": "git", "url": "https://github.com/danielnagel/vault.git", "pat": "ENV:WIKI_PAT" }
-]

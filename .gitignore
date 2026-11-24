@@ -29,3 +29,6 @@ data/
 # either the generic default or a LOGO_FILE/FAVICON_FILE override).
 frontend/public/logo.svg
 frontend/public/favicon.svg
+
+# Local source config (copy from backend/sources.config.example.json)
+backend/sources.config.json
